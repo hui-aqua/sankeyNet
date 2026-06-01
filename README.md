@@ -43,7 +43,7 @@ npm run build
 
 ## GitHub Pages
 
-This repository includes a GitHub Pages workflow in `.github/workflows/pages.yml`. After pushing to `main`, enable Pages in the repository settings with **GitHub Actions** as the source. The Vite base path is derived from `GITHUB_REPOSITORY`, so project pages such as `owner/future-net-explorer` deploy under `/future-net-explorer/`, while `owner.github.io` repositories deploy at `/`.
+This repository includes a GitHub Pages workflow in `.github/workflows/pages.yml`. After pushing to `main`, open **Settings -> Pages** for the repository and enable Pages with **GitHub Actions** as the source. The Vite base path is derived from `GITHUB_REPOSITORY`, so project pages such as `owner/future-net-explorer` deploy under `/future-net-explorer/`, while `owner.github.io` repositories deploy at `/`.
 
 ## Data
 
