@@ -2,7 +2,8 @@ import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
-    Plotly?: any;
+    // Replace 'any' with a generic object shape that accepts any property
+    Plotly?: Record<string, unknown>;
   }
 }
 
@@ -98,39 +99,39 @@ export function SankeyDiagram() {
         ['Antifouling Treatment', 'Non-recyclable', 3.17],
       ];
 
-// 1. Keep this explicit order
-const forcedLeftOrder = [
-  'PA6', 
-  'PA66', 
-  'PA610, PA612, etc.', // This will now stay locked above HDPE
-  'HDPE', 
-  'UHMWPE',
-  'PET', 
-  'PEN, PBT, PTT, etc.',
-  'Brass', 
-  'Silicon Bronze', 
-  'Copper Nickel',
-  'Stainless Steel', 
-  'Galvanized Steel'
-];
-const labels = Array.from(new Set(rows.flatMap((row) => [row[0], row[1]])));
+      // 1. Keep this explicit order
+      const forcedLeftOrder = [
+        'PA6',
+        'PA66',
+        'PA610, PA612, etc.', // This will now stay locked above HDPE
+        'HDPE',
+        'UHMWPE',
+        'PET',
+        'PEN, PBT, PTT, etc.',
+        'Brass',
+        'Silicon Bronze',
+        'Copper Nickel',
+        'Stainless Steel',
+        'Galvanized Steel'
+      ];
+      const labels = Array.from(new Set(rows.flatMap((row) => [String(row[0]), String(row[1])])));
 
-const nodeX = labels.map((label) => {
-  return forcedLeftOrder.includes(label) ? 0.01 : undefined;
-});
+      const nodeX = labels.map((label) => {
+        return forcedLeftOrder.includes(label) ? 0.01 : undefined;
+      });
 
-const nodeY = labels.map((label) => {
-  const orderIndex = forcedLeftOrder.indexOf(label);
-  if (orderIndex !== -1) {
-    // We add a tiny offset modifier to help smaller values resist being pulled down by "snap"
-    let modifier = 0;
-    if (label === 'PA610, PA612, etc.') modifier = -0.02; // nudge upward
-    if (label === 'HDPE') modifier = 0.02; // nudge downward slightly to make room
-    
-    return 0.01 + (orderIndex / (forcedLeftOrder.length - 1)) * 0.98 + modifier;
-  }
-  return undefined; 
-});
+      const nodeY = labels.map((label) => {
+        const orderIndex = forcedLeftOrder.indexOf(label);
+        if (orderIndex !== -1) {
+          // We add a tiny offset modifier to help smaller values resist being pulled down by "snap"
+          let modifier = 0;
+          if (label === 'PA610, PA612, etc.') modifier = -0.02; // nudge upward
+          if (label === 'HDPE') modifier = 0.02; // nudge downward slightly to make room
+
+          return 0.01 + (orderIndex / (forcedLeftOrder.length - 1)) * 0.98 + modifier;
+        }
+        return undefined;
+      });
       const indexMap = labels.reduce<Record<string, number>>((acc, label, idx) => {
         acc[label] = idx;
         return acc;
@@ -198,7 +199,7 @@ const nodeY = labels.map((label) => {
 
       const width = containerRef.current.offsetWidth;
       const height = Math.round(width / 2.5);
-      
+
       const dataPlot = [
         {
           type: "sankey",
