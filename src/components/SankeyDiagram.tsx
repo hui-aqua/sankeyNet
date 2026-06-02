@@ -232,9 +232,22 @@ export function SankeyDiagram() {
       ];
 
       const layout = {
+        title: {
+          text:
+            'Global Aquaculture Netting Technology Landscape' +
+            '<br><span style="font-size:16px;color:gray">' +
+            'An Interactive Knowledge Map of Materials, Structures, Manufacturing and Sustainability' +
+            '</span>',
+          font: {
+            size: 28,
+          },
+          x: 0.5, // center
+          xanchor: "center",
+        },
+
         width,
         height,
-        margin: { l: 0, r: 0, t: 0, b: 0 },
+        margin: { l: 0, r: 0, t: 60, b: 0 },
       };
 
       window.Plotly.react(containerRef.current, dataPlot, layout, { responsive: true });
