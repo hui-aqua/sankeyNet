@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 
 declare global {
   interface Window {
-    // Replace 'any' with a generic object shape that accepts any property
-    Plotly?: Record<string, unknown>;
+    Plotly?: {
+      react: (el: HTMLDivElement | null, data: unknown[], layout: unknown, config?: unknown) => void;
+      [key: string]: unknown;
+    };
   }
 }
 
