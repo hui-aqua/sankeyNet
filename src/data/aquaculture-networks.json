@@ -1,0 +1,258 @@
+{
+  "nodes": [
+    {
+      "id": "pe",
+      "label": "PE",
+      "type": "material",
+      "description": "High-density polyethylene is widely used for aquaculture netting because it offers low water absorption, chemical resistance, and a favorable strength-to-weight ratio.",
+      "image": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=900&q=80",
+      "references": [
+        {
+          "title": "FAO technical guidelines for aquaculture gear and materials",
+          "url": "https://www.fao.org/fishery/en/aquaculture",
+          "publisher": "FAO"
+        }
+      ],
+      "relatedTechnologyIds": ["monofilament", "knotless-net"]
+    },
+    {
+      "id": "pa",
+      "label": "PA / Nylon",
+      "type": "material",
+      "description": "Polyamide fibers are valued for high tensile strength and abrasion resistance, but they absorb more water than polyethylene and require careful design for long deployments.",
+      "image": "https://images.unsplash.com/photo-1581093458791-9f3c3900df7b?auto=format&fit=crop&w=900&q=80",
+      "references": [
+        {
+          "title": "Synthetic materials for fishing gear",
+          "url": "https://www.fao.org/4/ah827e/AH827E00.htm",
+          "publisher": "FAO"
+        }
+      ],
+      "relatedTechnologyIds": ["multifilament", "abrasion-resistance"]
+    },
+    {
+      "id": "pet",
+      "label": "PET",
+      "type": "material",
+      "description": "Polyester can provide dimensional stability, UV resistance, and low creep in selected aquaculture net constructions.",
+      "image": "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=900&q=80",
+      "references": [
+        {
+          "title": "Polyester fibers in marine textile applications",
+          "url": "https://www.textileworld.com/",
+          "publisher": "Textile World"
+        }
+      ],
+      "relatedTechnologyIds": ["braided-yarn", "high-strength"]
+    },
+    {
+      "id": "monofilament",
+      "label": "Monofilament",
+      "type": "fiber",
+      "description": "Single continuous filaments create smooth surfaces that can reduce drag and may make fouling organisms less able to attach.",
+      "image": "https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["low-fouling", "pe"]
+    },
+    {
+      "id": "multifilament",
+      "label": "Multifilament",
+      "type": "fiber",
+      "description": "Bundles of fine filaments improve flexibility and knot handling while increasing surface area compared with monofilament designs.",
+      "image": "https://images.unsplash.com/photo-1521078803125-5f6bb9c7d13f?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["knotted-net", "pa"]
+    },
+    {
+      "id": "twisted-yarn",
+      "label": "Twisted Yarn",
+      "type": "yarn",
+      "description": "Twisted yarn organizes fibers into a stable helix that balances strength, flexibility, and familiar net-making processes.",
+      "image": "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["eight-strand-twine"]
+    },
+    {
+      "id": "braided-yarn",
+      "label": "Braided Yarn",
+      "type": "yarn",
+      "description": "Braided yarn routes interlace strands to improve handling stability and distribute mechanical loading over more contact points.",
+      "image": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["braided-twine", "high-strength"]
+    },
+    {
+      "id": "eight-strand-twine",
+      "label": "8-Strand Twine",
+      "type": "twine",
+      "description": "Eight-strand twine combines yarn bundles into a strong aquaculture twine architecture used in high-load cage nets.",
+      "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["knotless-net"]
+    },
+    {
+      "id": "braided-twine",
+      "label": "Braided Twine",
+      "type": "twine",
+      "description": "Braided twine creates a compact construction with good dimensional stability and abrasion performance.",
+      "image": "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["semi-rigid-net", "abrasion-resistance"]
+    },
+    {
+      "id": "knotless-net",
+      "label": "Knotless Net",
+      "type": "net",
+      "description": "Knotless netting removes knot stress concentrations, creating smoother mesh intersections and lowering fish abrasion risk.",
+      "image": "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["offshore-salmon", "low-fouling"]
+    },
+    {
+      "id": "knotted-net",
+      "label": "Knotted Net",
+      "type": "net",
+      "description": "Knotted nets are established, repairable, and mechanically familiar, but knots can increase drag and local wear.",
+      "image": "https://images.unsplash.com/photo-1476673160081-cf065607f449?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["service-repairability"]
+    },
+    {
+      "id": "semi-rigid-net",
+      "label": "Semi-Rigid Net",
+      "type": "net",
+      "description": "Semi-rigid net designs use stiffer materials or structures to maintain cage volume and resist deformation under currents.",
+      "image": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["predator-resistance", "offshore-salmon"]
+    },
+    {
+      "id": "copper-coating",
+      "label": "Copper Coating",
+      "type": "treatment",
+      "description": "Copper-based antifouling treatments suppress biofouling but require environmental risk assessment and regulatory compliance.",
+      "image": "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=900&q=80",
+      "references": [
+        {
+          "title": "Antifouling systems and environmental considerations",
+          "url": "https://www.imo.org/en/OurWork/Environment/Pages/Anti-fouling.aspx",
+          "publisher": "IMO"
+        }
+      ],
+      "relatedTechnologyIds": ["low-fouling"]
+    },
+    {
+      "id": "silicone-release",
+      "label": "Silicone Release",
+      "type": "treatment",
+      "description": "Foul-release silicone surfaces reduce organism adhesion so cleaning forces can remove biofouling more easily.",
+      "image": "https://images.unsplash.com/photo-1565728744382-61accd4aa148?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["low-fouling"]
+    },
+    {
+      "id": "uv-stabilizer",
+      "label": "UV Stabilizer",
+      "type": "treatment",
+      "description": "UV stabilizer packages slow polymer degradation in sunlight-exposed cage environments.",
+      "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["high-strength"]
+    },
+    {
+      "id": "low-fouling",
+      "label": "Low Fouling",
+      "type": "performance",
+      "description": "Low fouling performance reduces cleaning frequency, maintains water exchange, and can improve fish welfare during long deployments.",
+      "image": "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["copper-coating", "silicone-release"]
+    },
+    {
+      "id": "high-strength",
+      "label": "High Strength",
+      "type": "performance",
+      "description": "High strength net routes tolerate storm loading, currents, handling events, and higher exposed biomass systems.",
+      "image": "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["offshore-salmon"]
+    },
+    {
+      "id": "abrasion-resistance",
+      "label": "Abrasion Resistance",
+      "type": "performance",
+      "description": "Abrasion resistance helps nets survive contact with frames, service vessels, cleaning systems, and predator interactions.",
+      "image": "https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["predator-resistance"]
+    },
+    {
+      "id": "service-repairability",
+      "label": "Service Repairability",
+      "type": "performance",
+      "description": "Service repairability captures how easily nets can be inspected, patched, cleaned, and redeployed during farm operations.",
+      "image": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["nearshore-trout"]
+    },
+    {
+      "id": "offshore-salmon",
+      "label": "Offshore Salmon Farming",
+      "type": "application",
+      "description": "High-energy offshore salmon sites need robust nets with low fouling, strong twine routes, and predictable deformation behavior.",
+      "image": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["knotless-net", "semi-rigid-net"]
+    },
+    {
+      "id": "nearshore-trout",
+      "label": "Nearshore Trout Farming",
+      "type": "application",
+      "description": "Nearshore trout farming benefits from maintainable nets that are easy to repair and suited to moderate exposure.",
+      "image": "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["knotted-net"]
+    },
+    {
+      "id": "predator-resistance",
+      "label": "Predator-Resistant Enclosures",
+      "type": "application",
+      "description": "Predator-resistant enclosures emphasize abrasion tolerance, mesh stability, and resistance to biting or impact damage.",
+      "image": "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?auto=format&fit=crop&w=900&q=80",
+      "references": [],
+      "relatedTechnologyIds": ["semi-rigid-net", "abrasion-resistance"]
+    }
+  ],
+  "links": [
+    
+    { "source": "pe", "target": "monofilament", "value": 0.5 },
+    { "source": "pe", "target": "multifilament", "value": 2 },
+    { "source": "pa", "target": "multifilament", "value": 4 },
+    { "source": "pa", "target": "monofilament", "value": 1 },
+    { "source": "pet", "target": "multifilament", "value": 2.5 },
+    
+    { "source": "monofilament", "target": "twisted-yarn", "value": 0.5 },
+    { "source": "multifilament", "target": "twisted-yarn", "value": 5 },
+    { "source": "multifilament", "target": "braided-yarn", "value": 4.5 },
+    
+    { "source": "twisted-yarn", "target": "eight-strand-twine", "value": 10 },
+    { "source": "braided-yarn", "target": "braided-twine", "value": 8 },
+    
+    { "source": "eight-strand-twine", "target": "knotless-net", "value": 9 },
+    { "source": "eight-strand-twine", "target": "knotted-net", "value": 4 },
+    { "source": "braided-twine", "target": "semi-rigid-net", "value": 6 },
+    { "source": "knotless-net", "target": "copper-coating", "value": 6 },
+    { "source": "knotless-net", "target": "silicone-release", "value": 5 },
+    { "source": "knotted-net", "target": "uv-stabilizer", "value": 4 },
+    { "source": "semi-rigid-net", "target": "uv-stabilizer", "value": 5 },
+    { "source": "copper-coating", "target": "low-fouling", "value": 6 },
+    { "source": "silicone-release", "target": "low-fouling", "value": 5 },
+    { "source": "uv-stabilizer", "target": "high-strength", "value": 5 },
+    { "source": "uv-stabilizer", "target": "abrasion-resistance", "value": 3 },
+    { "source": "knotted-net", "target": "service-repairability", "value": 3 },
+    { "source": "low-fouling", "target": "offshore-salmon", "value": 8 },
+    { "source": "high-strength", "target": "offshore-salmon", "value": 5 },
+    { "source": "abrasion-resistance", "target": "predator-resistance", "value": 5 },
+    { "source": "service-repairability", "target": "nearshore-trout", "value": 3 }
+  ]
+}
