@@ -1,89 +1,51 @@
-# Future Net Explorer
+# SankeyNet
 
-Future Net Explorer is an open-source React application for exploring aquaculture net technologies from raw polymer materials to deployed net products. It uses an interactive Sankey diagram to show how materials, fibers, yarns, twines, net constructions, treatments, performance properties, and applications connect.
+SankeyNet is a minimal Vite + React application that renders an interactive Plotly Sankey diagram in the browser.
 
-## Features
+## What it includes
 
-- Interactive D3 Sankey diagram powered by a generic graph structure.
-- Hover a node to highlight upstream and downstream paths while fading unrelated routes.
-- Select a node to inspect metadata, imagery, references, and related technologies.
-- Global search that highlights matching technologies and related routes.
-- Filters for material, net type, performance property, and application.
-- Responsive layout with light and dark modes.
-- Business data loaded from JSON.
-- Strict TypeScript, unit tests, component tests, and GitHub Actions CI.
+- A simple single-page React app
+- A Plotly Sankey chart in `src/components/SankeyDiagram.tsx`
+- Manual node position control via `nodePos`
+- A clean, minimal UI with only the Sankey visualization
 
-## Tech Stack
+## Run locally
 
-- React
-- TypeScript
-- Vite
-- D3.js
-- d3-sankey
-- Tailwind CSS
-- Vitest and Testing Library
-
-## Getting Started
-
-Install Node.js 22 or newer, then run:
+Install dependencies and start the dev server:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Build and verify:
+Open the app at `http://localhost:5173`.
+
+## Build
+
+Build for production:
 
 ```bash
-npm run lint
-npm run typecheck
-npm test
 npm run build
 ```
 
-## GitHub Pages
+Preview the production build locally:
 
-This repository includes a GitHub Pages workflow in `.github/workflows/pages.yml`. After pushing to `main`, open **Settings -> Pages** for the repository and enable Pages with **GitHub Actions** as the source. The Vite base path is derived from `GITHUB_REPOSITORY`, so project pages such as `owner/future-net-explorer` deploy under `/future-net-explorer/`, while `owner.github.io` repositories deploy at `/`.
-
-## Data
-
-The example aquaculture dataset lives in [src/data/aquaculture-networks.json](src/data/aquaculture-networks.json). Nodes use this shape:
-
-```json
-{
-  "id": "pe",
-  "label": "PE",
-  "type": "material",
-  "description": "...",
-  "image": "...",
-  "references": []
-}
+```bash
+npm run preview
 ```
 
-Links use this shape:
+## Project structure
 
-```json
-{
-  "source": "pe",
-  "target": "monofilament",
-  "value": 10
-}
-```
+- `src/App.tsx` — app entry point
+- `src/main.tsx` — Vite React bootstrap
+- `src/components/SankeyDiagram.tsx` — Plotly Sankey implementation
+- `src/index.css` — app styles
 
-## Project Structure
+## Notes
 
-```text
-src/
-  components/       React components and SVG diagram surface
-  data/             JSON business data
-  domain/           Graph, search, filtering, and technology types
-  hooks/            UI state orchestration
-  infrastructure/   Data loading adapters
-  visualization/    Generic d3-sankey layout adapter
-```
-
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the architecture rationale.
+- The Sankey component loads Plotly from a CDN, so no local Plotly package is required in the app bundle.
+- This repository no longer includes the old JSON dataset, D3 graph adapters, or legacy test artifacts.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+MIT. See `LICENSE`.
