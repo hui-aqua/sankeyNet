@@ -98,26 +98,25 @@ export function SankeyDiagram() {
 
         // Mesh shape
 
-['Knotted', 'Rhombus (Square)', 3.87],
+        ['Knotted', 'Rhombus (Square)', 3.87],
 
-['Knotless', 'Rhombus (Square)', 5.00]
-['Knotless', 'Hexagonal', 1.63]
+        ['Knotless', 'Rhombus (Square)', 5.00],
+        ['Knotless', 'Hexagonal', 1.63],
 
         // Treatment
-['Rhombus (Square)', 'Untreated', 3.10],
-['Rhombus (Square)', 'Antifouling Treatment', 5.77],
+        ['Rhombus (Square)', 'Untreated', 3.10],
+        ['Rhombus (Square)', 'Antifouling Treatment', 5.77],
 
-['Hexagonal', 'Untreated', 1.06],
-['Hexagonal', 'Antifouling Treatment', 0.57],
+        ['Hexagonal', 'Untreated', 1.06],
+        ['Hexagonal', 'Antifouling Treatment', 0.57],
 
-        // recyclable
-        // End-of-Life
+        // recyclable End-of-Life
 
-['Untreated', 'Recyclable', 3.74],
-['Untreated', 'Non-recyclable', 0.42],
+        ['Untreated', 'Recyclable', 3.74],
+        ['Untreated', 'Non-recyclable', 0.42],
 
-['Antifouling Treatment', 'Recyclable', 3.17],
-['Antifouling Treatment', 'Non-recyclable', 3.17],
+        ['Antifouling Treatment', 'Recyclable', 3.17],
+        ['Antifouling Treatment', 'Non-recyclable', 3.17],
       ];
 
       const labels = Array.from(new Set(rows.flatMap((row) => [row[0], row[1]])));
@@ -182,7 +181,7 @@ export function SankeyDiagram() {
         Yarn: colors.green,
         'Twisted twine': colors.gray,
         'Braided twine': colors.blue,
-        'Mono filament': colors.blue,
+        'Mono filament': colors.yellow,
 
         // ===== Manufacturing =====
         Knitting: colors.green,
