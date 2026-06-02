@@ -98,27 +98,26 @@ export function SankeyDiagram() {
 
         // Mesh shape
 
-['Knotted', 'Rhombus (Square)', 3.68],
-['Knotted', 'Hexagonal', 0.19],
+['Knotted', 'Rhombus (Square)', 3.87],
 
-['Knotless', 'Rhombus (Square)', 4.97],
-['Knotless', 'Hexagonal', 1.66],
+['Knotless', 'Rhombus (Square)', 5.00]
+['Knotless', 'Hexagonal', 1.63]
 
         // Treatment
-['Rhombus (Square)', 'Untreated', 3.03],
-['Rhombus (Square)', 'Antifouling Treatment', 5.62],
+['Rhombus (Square)', 'Untreated', 3.10],
+['Rhombus (Square)', 'Antifouling Treatment', 5.77],
 
-['Hexagonal', 'Untreated', 1.20],
-['Hexagonal', 'Antifouling Treatment', 0.65],
+['Hexagonal', 'Untreated', 1.06],
+['Hexagonal', 'Antifouling Treatment', 0.57],
 
         // recyclable
         // End-of-Life
 
-        ['Untreated', 'Recyclable', 3.78],
-        ['Untreated', 'Non-recyclable', 0.42],
+['Untreated', 'Recyclable', 3.74],
+['Untreated', 'Non-recyclable', 0.42],
 
-        ['Antifouling Treatment', 'Recyclable', 3.15],
-        ['Antifouling Treatment', 'Non-recyclable', 3.15],
+['Antifouling Treatment', 'Recyclable', 3.17],
+['Antifouling Treatment', 'Non-recyclable', 3.17],
       ];
 
       const labels = Array.from(new Set(rows.flatMap((row) => [row[0], row[1]])));
