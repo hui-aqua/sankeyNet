@@ -1,150 +1,108 @@
-import { useMemo } from "react";
-import { createSankeyLayout } from "../visualization/sankeyLayout";
-import type { Graph } from "../domain/types";
-import { useElementSize } from "../hooks/useElementSize";
+import { useEffect, useRef } from "react";
 
-interface SankeyDiagramProps<TNode, TLink> {
-  graph: Graph<TNode, TLink>;
-  activeNodeIds: Set<string>;
-  activeLinkIds: Set<string>;
-  highlightedNodeIds: Set<string>;
-  selectedNodeId: string | null;
-  onHoverNode: (nodeId: string | null) => void;
-  onSelectNode: (nodeId: string) => void;
-  getNodeLabel: (node: TNode) => string;
-  getNodeCategory: (node: TNode) => string;
+declare global {
+  interface Window {
+    google?: any;
+  }
 }
 
-const categoryColors: Record<string, string> = {
-  material: "#178ea6",
-  fiber: "#2e7d57",
-  yarn: "#7c3aed",
-  twine: "#d97706",
-  net: "#dc2626",
-  treatment: "#0891b2",
-  performance: "#4f46e5",
-  application: "#0f766e"
-};
+export function SankeyDiagram() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-export function SankeyDiagram<TNode, TLink>({
-  graph,
-  activeNodeIds,
-  activeLinkIds,
-  highlightedNodeIds,
-  selectedNodeId,
-  onHoverNode,
-  onSelectNode,
-  getNodeLabel,
-  getNodeCategory
-}: SankeyDiagramProps<TNode, TLink>) {
-  const { ref, size } = useElementSize<HTMLDivElement>();
-  const layout = useMemo(() => createSankeyLayout(graph, size.width, size.height), [graph, size.height, size.width]);
-  const hasActiveState = activeNodeIds.size > 0 || activeLinkIds.size > 0 || highlightedNodeIds.size > 0;
+  useEffect(() => {
+    let cancelled = false;
 
-  return (
-    <div ref={ref} className="h-[70vh] min-h-[620px] w-full">
-      <svg className="h-full w-full" role="img" aria-label="Sankey diagram of aquaculture net technologies">
-        <defs>
-          {layout.links.map((link) => (
-            <linearGradient key={link.id} id={`gradient-${safeId(link.id)}`} gradientUnits="userSpaceOnUse" x1={link.source.x1} x2={link.target.x0}>
-              <stop offset="0%" stopColor={colorForCategory(getNodeCategory(link.source.data))} />
-              <stop offset="100%" stopColor={colorForCategory(getNodeCategory(link.target.data))} />
-            </linearGradient>
-          ))}
-        </defs>
+    function loadScript() {
+      return new Promise<void>((resolve) => {
+        if (window.google && window.google.charts) {
+          resolve();
+          return;
+        }
+        const script = document.createElement("script");
+        script.src = "https://www.gstatic.com/charts/loader.js";
+        script.onload = () => resolve();
+        document.body.appendChild(script);
+      });
+    }
 
-        <g fill="none">
-          {layout.links.map((link) => {
-            const isActive = activeLinkIds.has(link.id);
-            const opacity = hasActiveState ? (isActive ? 0.82 : 0.08) : 0.28;
-            return (
-              <path
-                key={link.id}
-                d={link.path}
-                stroke={`url(#gradient-${safeId(link.id)})`}
-                strokeWidth={link.width}
-                strokeOpacity={opacity}
-                className="transition-opacity duration-200"
-              >
-                <title>
-                  {getNodeLabel(link.source.data)} to {getNodeLabel(link.target.data)}: {link.value}
-                </title>
-              </path>
-            );
-          })}
-        </g>
+    async function draw() {
+      await loadScript();
+      if (cancelled) return;
+      window.google.charts.load("current", { packages: ["sankey"] });
+      window.google.charts.setOnLoadCallback(() => {
+        if (!containerRef.current) return;
 
-        <g>
-          {layout.nodes.map((node) => {
-            const label = getNodeLabel(node.data);
-            const category = getNodeCategory(node.data);
-            const isActive = activeNodeIds.has(node.id);
-            const isHighlighted = highlightedNodeIds.has(node.id);
-            const isSelected = selectedNodeId === node.id;
-            const opacity = hasActiveState ? (isActive || isHighlighted ? 1 : 0.18) : 1;
-            const labelAnchor = node.x0 < size.width / 2 ? "start" : "end";
-            const labelX = node.x0 < size.width / 2 ? node.x1 + 8 : node.x0 - 8;
+        const data = new window.google.visualization.DataTable();
+        data.addColumn('string', 'From');
+        data.addColumn('string', 'To');
+        data.addColumn('number', 'Weight');
+        data.addRows([
+          ['PA6', 'Polyamide family', 6],
+          ['HDPE', 'Polyethylene family', 3],
+          ['UHMWPE', 'Polyethylene family', 1],
+          ['PET', 'Polyester family', 2],
+          ['Brass', 'Metal alloy', 1],
+          ['Silicon Bronze', 'Metal alloy', 1],
+          ['Copper Nickel', 'Metal alloy', 1],
+          ['Polyamide family', 'Synthetic material', 6],
+          ['Polyester family', 'Synthetic material', 2],
+          ['Polyethylene family', 'Synthetic material', 4],
+          ['Metal alloy', 'Metal material', 3],
+          ['Synthetic material', 'Multifilament', 10],
+          ['Synthetic material', 'Monofilament', 1.5],
+          ['Synthetic material', 'Split-film', 0.5],
+          ['Metal material', 'Metal wire', 3],
+          ['Multifilament', 'Yarn', 5],
+          ['Multifilament', 'Twisted twine', 4],
+          ['Multifilament', 'Braided twine', 1],
+          ['Monofilament', 'Mono filament', 1.5],
+          ['Split-film', 'Split-film tape', 0.5],
+          ['Metal wire', 'Wire', 3],
+          ['Yarn', 'Raschel knitting', 5],
+          ['Twisted twine', 'Knotting', 4],
+          ['Braided twine', 'Knotless braiding', 1],
+          ['Mono filament', 'Welding', 1.5],
+          ['Wire', 'Wire weaving', 3],
+          ['Split-film tape', 'Warp knitting', 0.5],
+          ['Raschel knitting', 'Knotless', 5],
+          ['Knotting', 'Knotted', 4],
+          ['Knotless braiding', 'Knotless', 1],
+          ['Welding', 'Welded', 1.5],
+          ['Wire weaving', 'Knotless', 3],
+          ['Warp knitting', 'Knotless', 0.5],
+          ['Knotless', 'Diamond', 6],
+          ['Knotless', 'Hexagonal', 2],
+          ['Knotless', 'Square', 1.5],
+          ['Knotted', 'Diamond', 4],
+          ['Welded', 'Square', 1.5],
+          ['Diamond', 'Coated', 6],
+          ['Diamond', 'Untreated', 4],
+          ['Hexagonal', 'Coated', 1],
+          ['Hexagonal', 'Untreated', 1],
+          ['Square', 'Coated', 1],
+          ['Square', 'Untreated', 2],
+          ['Coated', 'Non-recyclable', 6],
+          ['Coated', 'Recyclable', 2],
+          ['Untreated', 'Non-recyclable', 1],
+          ['Untreated', 'Recyclable', 6]
+        ]);
 
-            return (
-              <g
-                key={node.id}
-                role="button"
-                tabIndex={0}
-                aria-label={`${label}, ${category}`}
-                className="cursor-pointer outline-none transition-opacity duration-200"
-                opacity={opacity}
-                onMouseEnter={() => onHoverNode(node.id)}
-                onMouseLeave={() => onHoverNode(null)}
-                onFocus={() => onHoverNode(node.id)}
-                onBlur={() => onHoverNode(null)}
-                onClick={() => onSelectNode(node.id)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    onSelectNode(node.id);
-                  }
-                }}
-              >
-                <rect
-                  x={node.x0}
-                  y={node.y0}
-                  width={Math.max(8, node.x1 - node.x0)}
-                  height={Math.max(8, node.y1 - node.y0)}
-                  rx={4}
-                  fill={colorForCategory(category)}
-                  stroke={isSelected || isHighlighted ? "#0f172a" : "transparent"}
-                  strokeWidth={isSelected || isHighlighted ? 3 : 0}
-                />
-                <text
-                  x={labelX}
-                  y={(node.y0 + node.y1) / 2}
-                  dy="0.35em"
-                  textAnchor={labelAnchor}
-                  className="fill-slate-800 text-[12px] font-semibold dark:fill-slate-100"
-                >
-                  {label}
-                </text>
-                <text
-                  x={labelX}
-                  y={(node.y0 + node.y1) / 2 + 15}
-                  textAnchor={labelAnchor}
-                  className="fill-slate-500 text-[10px] uppercase tracking-wide dark:fill-slate-400"
-                >
-                  {category}
-                </text>
-              </g>
-            );
-          })}
-        </g>
-      </svg>
-    </div>
-  );
-}
+        const width = containerRef.current.offsetWidth;
+        const height = Math.round(width / 2);
+        const options = { width, height };
+        const chart = new window.google.visualization.Sankey(containerRef.current);
+        chart.draw(data, options);
+      });
+    }
 
-function colorForCategory(category: string): string {
-  return categoryColors[category] ?? "#64748b";
-}
+    draw();
+    window.addEventListener("resize", draw);
 
-function safeId(id: string): string {
-  return id.replace(/[^a-zA-Z0-9_-]/g, "-");
+    return () => {
+      cancelled = true;
+      window.removeEventListener("resize", draw);
+    };
+  }, []);
+
+  return <div ref={containerRef} id="sankey_multiple" style={{ width: '100%', aspectRatio: '2 / 1', minHeight: 320 }} />;
 }
