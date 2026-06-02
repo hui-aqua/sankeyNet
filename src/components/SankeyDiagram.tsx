@@ -94,14 +94,11 @@ export function SankeyDiagram() {
 
         // Mesh connection
 
-        // Mesh connection
-
-        ['Knitting', 'Knotless', 4.1],
+        ['Knitting', 'Knotless', 4.10],
 
         ['Knotting', 'Knotted', 3.87],
 
-        ['Weaving', 'Knotless', 2.02],
-        ['Weaving', 'Knotted', 0.51],
+        ['Weaving', 'Knotless', 2.53],
 
         // Mesh shape
 
