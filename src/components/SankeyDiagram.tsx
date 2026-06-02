@@ -67,8 +67,6 @@ export function SankeyDiagram() {
 
         ['Metal material', 'Monofilament', 0.5],
 
-        // Yarn/twine  leavel
-
         // Yarn/Twine level
 
         ['Multifilament', 'Yarn', 4.38],
@@ -79,8 +77,6 @@ export function SankeyDiagram() {
         ['Split-film', 'Yarn', 0.44],
 
         // Net manufacturing
-
-        // Manufacturing
 
         ['Yarn', 'Knitting', 4.1],
         ['Yarn', 'Weaving', 1.03],
@@ -102,17 +98,18 @@ export function SankeyDiagram() {
 
         // Mesh shape
 
-        ['Knotted', 'Rhombus (Square)', 4.16],
-        ['Knotted', 'Hexagonal', 0.22],
+['Knotted', 'Rhombus (Square)', 3.68],
+['Knotted', 'Hexagonal', 0.19],
 
-        ['Knotless', 'Rhombus (Square)', 4.59],
-        ['Knotless', 'Hexagonal', 1.53],
+['Knotless', 'Rhombus (Square)', 4.97],
+['Knotless', 'Hexagonal', 1.66],
 
         // Treatment
-        ['Rhombus (Square)', 'Untreated', 3.06],
-        ['Rhombus (Square)', 'Antifouling Treatment', 5.69],
-        ['Hexagonal', 'Untreated', 1.14],
-        ['Hexagonal', 'Antifouling Treatment', 0.61],
+['Rhombus (Square)', 'Untreated', 3.03],
+['Rhombus (Square)', 'Antifouling Treatment', 5.62],
+
+['Hexagonal', 'Untreated', 1.20],
+['Hexagonal', 'Antifouling Treatment', 0.65],
 
         // recyclable
         // End-of-Life
