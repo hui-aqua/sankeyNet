@@ -1,19 +1,42 @@
-import { useEffect, useRef } from "react";
+// src/components/SankeyDiagram.tsx
+import { useEffect, useRef, useState } from "react";
+import { NODE_DETAILS, NodeContent } from "./sankeyData";
 
 declare global {
   interface Window {
     Plotly?: {
       react: (el: HTMLDivElement | null, data: unknown[], layout: unknown, config?: unknown) => void;
+      purge: (el: HTMLDivElement | null) => void;
       [key: string]: unknown;
     };
   }
 }
 
+// 1. Strict lint compliance: Define explicit internal structures instead of using 'any'
+interface PlotlyNodeData {
+  label: string;
+}
+
+interface PlotlyLinkData {
+  link: {
+    source: PlotlyNodeData;
+    target: PlotlyNodeData;
+    value: number;
+  };
+}
+
+interface PlotlyDOMElement extends HTMLElement {
+  __data__?: PlotlyLinkData;
+}
+
 export function SankeyDiagram() {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [selectedNode, setSelectedNode] = useState<NodeContent | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    // 2. Lint warning fix: Freeze ref pointer target locally for the safe cleanup function
+    const currentContainer = containerRef.current;
 
     function loadPlotly() {
       return new Promise<void>((resolve) => {
@@ -21,7 +44,6 @@ export function SankeyDiagram() {
           resolve();
           return;
         }
-
         const script = document.createElement("script");
         script.src = "https://cdn.plot.ly/plotly-2.30.0.min.js";
         script.async = true;
@@ -32,9 +54,9 @@ export function SankeyDiagram() {
 
     async function draw() {
       await loadPlotly();
-      if (cancelled || !containerRef.current || !window.Plotly) return;
+      if (cancelled || !currentContainer || !window.Plotly) return;
 
-      const rows = [
+     const rows = [
         // raw material (Enforced order for column 1)
         ['PA6', 'Polyamide family', 4.05],
         ['PA66', 'Polyamide family', 0.9],
@@ -101,39 +123,28 @@ export function SankeyDiagram() {
         ['Antifouling Treatment', 'Non-recyclable', 3.17],
       ];
 
-      // 1. Keep this explicit order
       const forcedLeftOrder = [
-        'PA6',
-        'PA66',
-        'PA610, PA612, etc.', // This will now stay locked above HDPE
-        'HDPE',
-        'UHMWPE',
-        'PET',
-        'PEN, PBT, PTT, etc.',
-        'Brass',
-        'Silicon Bronze',
-        'Copper Nickel',
-        'Stainless Steel',
-        'Galvanized Steel'
+        'PA6', 'PA66', 'PA610, PA612, etc.',
+        'HDPE', 'UHMWPE', 'PET', 'PEN, PBT, PTT, etc.',
+        'Brass', 'Silicon Bronze', 'Copper Nickel',
+        'Stainless Steel', 'Galvanized Steel'
       ];
+
       const labels = Array.from(new Set(rows.flatMap((row) => [String(row[0]), String(row[1])])));
 
-      const nodeX = labels.map((label) => {
-        return forcedLeftOrder.includes(label) ? 0.01 : undefined;
-      });
+      const nodeX = labels.map((label) => forcedLeftOrder.includes(label) ? 0.01 : undefined);
 
       const nodeY = labels.map((label) => {
         const orderIndex = forcedLeftOrder.indexOf(label);
         if (orderIndex !== -1) {
-          // We add a tiny offset modifier to help smaller values resist being pulled down by "snap"
           let modifier = 0;
-          if (label === 'PA610, PA612, etc.') modifier = -0.02; // nudge upward
-          if (label === 'HDPE') modifier = 0.02; // nudge downward slightly to make room
-
+          if (label === 'PA610, PA612, etc.') modifier = -0.02;
+          if (label === 'HDPE') modifier = 0.02;
           return 0.01 + (orderIndex / (forcedLeftOrder.length - 1)) * 0.98 + modifier;
         }
         return undefined;
       });
+
       const indexMap = labels.reduce<Record<string, number>>((acc, label, idx) => {
         acc[label] = idx;
         return acc;
@@ -144,69 +155,41 @@ export function SankeyDiagram() {
       const value = rows.map((row) => row[2]);
 
       const colors = {
-        red: "#ff6b6b",
-        blue: "#4dabf7",
-        yellow: "#ffd43b",
-        green: "#61e786",
-        orange: "#f79316",
-        teal: "#0ea5a4",
-        purple: "#8b5cf6",
-        pink: "#ec4899",
-        brown: "#b76e79",
-        gray: "#475569",
+        red: "#ff6b6b", blue: "#4dabf7", yellow: "#ffd43b",
+        green: "#61e786", orange: "#f79316", teal: "#0ea5a4",
+        purple: "#8b5cf6", pink: "#ec4899", brown: "#b76e79", gray: "#475569",
       } as const;
 
       const colorMap: Record<string, string> = {
-        PA6: colors.gray,
-        PA66: colors.gray,
-        'PA610, PA612, etc.': colors.gray,
-        HDPE: colors.blue,
-        UHMWPE: colors.blue,
-        PET: colors.green,
-        'PEN, PBT, PTT, etc.': colors.green,
-        Brass: colors.orange,
-        'Silicon Bronze': colors.orange,
-        'Copper Nickel': colors.orange,
-        'Stainless Steel': colors.yellow,
-        'Galvanized Steel': colors.yellow,
-        'Polyamide family': colors.gray,
-        'Polyester family': colors.green,
-        'Polyethylene family': colors.blue,
-        'Copper Alloy family': colors.orange,
-        'Steel family': colors.yellow,
-        'Synthetic material': colors.teal,
-        'Metal material': colors.yellow,
-        Multifilament: colors.teal,
-        Monofilament: colors.yellow,
-        'Split-film': colors.purple,
-        Yarn: colors.green,
-        'Twisted twine': colors.gray,
-        'Braided twine': colors.blue,
-        'Mono filament': colors.yellow,
-        Knitting: colors.green,
-        Knotting: colors.gray,
-        Weaving: colors.blue,
-        Knotted: colors.gray,
-        Knotless: colors.green,
-        'Rhombus (Square)': colors.green,
-        Hexagonal: colors.blue,
-        Untreated: colors.gray,
-        'Antifouling Treatment': colors.green,
-        Recyclable: colors.green,
-        'Non-recyclable': colors.red,
+        PA6: colors.gray, PA66: colors.gray, 'PA610, PA612, etc.': colors.gray,
+        HDPE: colors.blue, UHMWPE: colors.blue, PET: colors.green,
+        'PEN, PBT, PTT, etc.': colors.green, Brass: colors.orange,
+        'Silicon Bronze': colors.orange, 'Copper Nickel': colors.orange,
+        'Stainless Steel': colors.yellow, 'Galvanized Steel': colors.yellow,
+        'Polyamide family': colors.gray, 'Polyester family': colors.green,
+        'Polyethylene family': colors.blue, 'Copper Alloy family': colors.orange,
+        'Steel family': colors.yellow, 'Synthetic material': colors.teal,
+        'Metal material': colors.yellow, Multifilament: colors.teal,
+        Monofilament: colors.yellow, 'Split-film': colors.purple,
+        Yarn: colors.green, 'Twisted twine': colors.gray, 'Braided twine': colors.blue,
+        'Mono filament': colors.yellow, Knitting: colors.green, Knotting: colors.gray,
+        Weaving: colors.blue, Knotted: colors.gray, Knotless: colors.green,
+        'Rhombus (Square)': colors.green, Hexagonal: colors.blue,
+        Untreated: colors.gray, 'Antifouling Treatment': colors.green,
+        Recyclable: colors.green, 'Non-recyclable': colors.red,
       };
 
       const nodeColors = labels.map((label) => colorMap[label] ?? "#94a3b8");
       const linkColors = value.map(() => "rgba(128, 128, 128, 0.4)");
 
-      const width = containerRef.current.offsetWidth;
+      const width = currentContainer.offsetWidth;
       const height = Math.round(width / 2.5);
 
       const dataPlot = [
         {
           type: "sankey",
           orientation: "h",
-          arrangement: "snap", // Crucial: overrides automatic sorting so x and y are respected
+          arrangement: "snap",
           node: {
             label: labels,
             color: nodeColors,
@@ -216,12 +199,7 @@ export function SankeyDiagram() {
             thickness: 20,
             line: { color: "#444", width: 0.5 },
           },
-          link: {
-            source,
-            target,
-            value,
-            color: linkColors,
-          },
+          link: { source, target, value, color: linkColors },
         },
       ];
 
@@ -241,17 +219,137 @@ export function SankeyDiagram() {
         margin: { l: 10, r: 10, t: 60, b: 0 },
       };
 
-      window.Plotly.react(containerRef.current, dataPlot, layout, { responsive: true });
+      window.Plotly.purge(currentContainer);
+
+      const cleanData = JSON.parse(JSON.stringify(dataPlot));
+      const cleanLayout = JSON.parse(JSON.stringify(layout));
+
+      window.Plotly.react(currentContainer, cleanData, cleanLayout, { responsive: true });
     }
 
     draw();
     window.addEventListener("resize", draw);
+// ROBUST CLICK DELEGATION: Makes text labels AND large colored rectangle nodes effortlessly clickable
+    const nativeClickHandler = (e: MouseEvent) => {
+      const target = e.target as PlotlyDOMElement | null;
+      if (!target) return;
+
+      console.log("DOM element targeted under mouse pointer:", target);
+
+      let clickedLabel = "";
+      
+      // 1. Direct Check: Did they tap text or a styled node label?
+      if (target.tagName === "text" || target.classList.contains("node-label")) {
+        clickedLabel = target.textContent?.trim() || "";
+      } 
+      // 2. Structural Check: Did they tap the colored vertical rectangle shape?
+      else if (target.closest(".sankey-node")) {
+        const textEl = target.closest(".sankey-node")?.querySelector("text");
+        clickedLabel = textEl?.textContent?.trim() || "";
+      } 
+      // 3. Flow Link Check: Did they tap a band between nodes?
+      else if (target.classList.contains("sankey-link") || target.closest(".sankey-link")) {
+        const linkData = target.__data__;
+        if (linkData?.link) {
+          clickedLabel = linkData.link.source.label || "";
+        }
+      }
+
+      // 4. Hit-Test Fallback: If Plotly's drag pane captures the pointer, peek directly underneath the mouse coordinates
+      if (!clickedLabel) {
+        const elementsUnderMouse = document.elementsFromPoint(e.clientX, e.clientY);
+        for (const element of elementsUnderMouse) {
+          const typedElement = element as PlotlyDOMElement;
+          
+          // Check if the element or its parent group is a valid Sankey Node block
+          const parentNodeGroup = typedElement.closest(".sankey-node");
+          if (parentNodeGroup) {
+            const labelText = parentNodeGroup.querySelector("text")?.textContent;
+            if (labelText) {
+              clickedLabel = labelText.trim();
+              break;
+            }
+          }
+          
+          // Check if it's an underlying link path
+          if (typedElement.classList.contains("sankey-link") || typedElement.__data__?.link) {
+            const dataObj = typedElement.__data__;
+            if (dataObj?.link?.source?.label) {
+              clickedLabel = dataObj.link.source.label.trim();
+              break;
+            }
+          }
+        }
+      }
+
+      console.log("Final matched label text value:", clickedLabel);
+
+      if (clickedLabel) {
+        const content = NODE_DETAILS[clickedLabel] || {
+          title: clickedLabel,
+          description: `Detailed technical specifications and environmental profiles for ${clickedLabel} are under compilation for Future Net Explorer.`
+        };
+        setSelectedNode(content);
+      }
+    };
+    if (currentContainer) {
+      currentContainer.addEventListener("click", nativeClickHandler);
+    }
 
     return () => {
       cancelled = true;
       window.removeEventListener("resize", draw);
+      if (currentContainer) {
+        currentContainer.removeEventListener("click", nativeClickHandler);
+        window.Plotly?.purge(currentContainer);
+      }
     };
   }, []);
 
-  return <div ref={containerRef} style={{ width: "100%", aspectRatio: "1 / 3", minHeight: 640 }} />;
+  return (
+    <div style={{ position: "relative", width: "100%", minHeight: 640 }}>
+      <div ref={containerRef} style={{ width: "100%", aspectRatio: "1 / 3", minHeight: 640 }} />
+
+      {selectedNode && (
+        <div 
+          style={{
+            position: "fixed", top: 0, right: 0, bottom: 0, left: 0,
+            backgroundColor: "rgba(0,0,0,0.6)", display: "flex",
+            justifyContent: "center", alignItems: "center", zIndex: 99999
+          }} 
+          onClick={() => setSelectedNode(null)}
+        >
+          <div 
+            style={{
+              backgroundColor: "#fff", padding: "24px", borderRadius: "12px",
+              maxWidth: "500px", width: "90%", boxShadow: "0 10px 25px rgba(0,0,0,0.2)", color: "#333"
+            }} 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
+              <h3 style={{ margin: 0, fontSize: "22px", fontWeight: "bold" }}>{selectedNode.title}</h3>
+              <button 
+                onClick={() => setSelectedNode(null)}
+                style={{ background: "none", border: "none", fontSize: "18px", cursor: "pointer", color: "#888" }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {selectedNode.imageUrl && (
+              <img 
+                src={selectedNode.imageUrl} 
+                alt={selectedNode.title} 
+                style={{ width: "100%", height: "auto", borderRadius: "6px", marginBottom: "16px", objectFit: "cover" }} 
+              />
+            )}
+
+            <p style={{ margin: 0, lineHeight: "1.6", color: "#4b5563" }}>
+              {selectedNode.description}
+            </p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

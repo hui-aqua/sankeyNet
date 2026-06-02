@@ -24,3 +24,22 @@ input {
 svg text {
   user-select: none;
 }
+
+/* ==========================================================================
+   CRITICAL INTERACTION FIX: Plotly Sankey Pointer Configuration
+   ========================================================================== */
+
+/* 1. Stop background drag boxes from swallowing canvas click coordinates */
+.js-plotly-plot .nsewdrag,
+.js-plotly-plot .bg {
+  pointer-events: none !important;
+}
+
+/* 2. Re-enable precise click registration on links, blocks, and text strings */
+.js-plotly-plot .sankey-node,
+.js-plotly-plot .node-capture,
+.js-plotly-plot .sankey-link,
+.js-plotly-plot .node-label {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
