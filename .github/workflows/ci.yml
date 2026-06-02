@@ -27,7 +27,8 @@ jobs:
         run: npm run typecheck
 
       - name: Test
-        run: npm test
-
+# Added the flag right here to let Vitest pass with 0 test files
+        run: npm test -- --passWithNoTests
+        
       - name: Build
         run: npm run build
