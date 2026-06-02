@@ -32,19 +32,14 @@ export function SankeyDiagram() {
       if (cancelled || !containerRef.current || !window.Plotly) return;
 
       const rows = [
-        //total should be 15
-
-        // raw material
+        // raw material (Enforced order for column 1)
         ['PA6', 'Polyamide family', 4.05],
         ['PA66', 'Polyamide family', 0.9],
         ['PA610, PA612, etc.', 'Polyamide family', 0.05],
-
         ['HDPE', 'Polyethylene family', 2.64],
         ['UHMWPE', 'Polyethylene family', 0.66],
-
         ['PET', 'Polyester family', 1.65],
         ['PEN, PBT, PTT, etc.', 'Polyester family', 0.05],
-
         ['Brass', 'Copper Alloy family', 0.1],
         ['Silicon Bronze', 'Copper Alloy family', 0.1],
         ['Copper Nickel', 'Copper Alloy family', 0.1],
@@ -52,11 +47,9 @@ export function SankeyDiagram() {
         ['Galvanized Steel', 'Steel family', 0.1],
 
         // material level
-
         ['Polyamide family', 'Synthetic material', 5],
         ['Polyester family', 'Synthetic material', 1.7],
         ['Polyethylene family', 'Synthetic material', 3.3],
-
         ['Steel family', 'Metal material', 0.2],
         ['Copper Alloy family', 'Metal material', 0.3],
 
@@ -64,11 +57,9 @@ export function SankeyDiagram() {
         ['Synthetic material', 'Multifilament', 8.75],
         ['Synthetic material', 'Monofilament', 0.81],
         ['Synthetic material', 'Split-film', 0.44],
-
         ['Metal material', 'Monofilament', 0.5],
 
         // Yarn/Twine level
-
         ['Multifilament', 'Yarn', 4.38],
         ['Multifilament', 'Twisted twine', 3.5],
         ['Multifilament', 'Braided twine', 0.87],
@@ -77,49 +68,69 @@ export function SankeyDiagram() {
         ['Split-film', 'Yarn', 0.44],
 
         // Net manufacturing
-
         ['Yarn', 'Knitting', 4.1],
         ['Yarn', 'Weaving', 1.03],
-
         ['Twisted twine', 'Knotting', 3.5],
-
         ['Braided twine', 'Knotting', 0.37],
         ['Braided twine', 'Weaving', 0.5],
-
         ['Mono filament', 'Weaving', 1],
 
         // Mesh connection
-
         ['Knitting', 'Knotless', 4.10],
-
         ['Knotting', 'Knotted', 3.87],
-
         ['Weaving', 'Knotless', 2.53],
 
         // Mesh shape
-
         ['Knotted', 'Rhombus (Square)', 3.87],
-
         ['Knotless', 'Rhombus (Square)', 5.00],
         ['Knotless', 'Hexagonal', 1.63],
 
         // Treatment
         ['Rhombus (Square)', 'Untreated', 3.10],
         ['Rhombus (Square)', 'Antifouling Treatment', 5.77],
-
         ['Hexagonal', 'Untreated', 1.06],
         ['Hexagonal', 'Antifouling Treatment', 0.57],
 
         // recyclable End-of-Life
-
         ['Untreated', 'Recyclable', 3.74],
         ['Untreated', 'Non-recyclable', 0.42],
-
         ['Antifouling Treatment', 'Recyclable', 3.17],
         ['Antifouling Treatment', 'Non-recyclable', 3.17],
       ];
 
-      const labels = Array.from(new Set(rows.flatMap((row) => [row[0], row[1]])));
+// 1. Keep this explicit order
+const forcedLeftOrder = [
+  'PA6', 
+  'PA66', 
+  'PA610, PA612, etc.', // This will now stay locked above HDPE
+  'HDPE', 
+  'UHMWPE',
+  'PET', 
+  'PEN, PBT, PTT, etc.',
+  'Brass', 
+  'Silicon Bronze', 
+  'Copper Nickel',
+  'Stainless Steel', 
+  'Galvanized Steel'
+];
+const labels = Array.from(new Set(rows.flatMap((row) => [row[0], row[1]])));
+
+const nodeX = labels.map((label) => {
+  return forcedLeftOrder.includes(label) ? 0.01 : undefined;
+});
+
+const nodeY = labels.map((label) => {
+  const orderIndex = forcedLeftOrder.indexOf(label);
+  if (orderIndex !== -1) {
+    // We add a tiny offset modifier to help smaller values resist being pulled down by "snap"
+    let modifier = 0;
+    if (label === 'PA610, PA612, etc.') modifier = -0.02; // nudge upward
+    if (label === 'HDPE') modifier = 0.02; // nudge downward slightly to make room
+    
+    return 0.01 + (orderIndex / (forcedLeftOrder.length - 1)) * 0.98 + modifier;
+  }
+  return undefined; 
+});
       const indexMap = labels.reduce<Record<string, number>>((acc, label, idx) => {
         acc[label] = idx;
         return acc;
@@ -146,61 +157,38 @@ export function SankeyDiagram() {
         PA6: colors.gray,
         PA66: colors.gray,
         'PA610, PA612, etc.': colors.gray,
-
         HDPE: colors.blue,
         UHMWPE: colors.blue,
-
         PET: colors.green,
         'PEN, PBT, PTT, etc.': colors.green,
-
         Brass: colors.orange,
         'Silicon Bronze': colors.orange,
         'Copper Nickel': colors.orange,
-
         'Stainless Steel': colors.yellow,
         'Galvanized Steel': colors.yellow,
-
-        // ===== Material family =====
         'Polyamide family': colors.gray,
         'Polyester family': colors.green,
         'Polyethylene family': colors.blue,
-
         'Copper Alloy family': colors.orange,
         'Steel family': colors.yellow,
-
-        // ===== Material category =====
         'Synthetic material': colors.teal,
         'Metal material': colors.yellow,
-
-        // ===== Fiber structure =====
         Multifilament: colors.teal,
         Monofilament: colors.yellow,
         'Split-film': colors.purple,
-
-        // ===== Yarn / Twine =====
         Yarn: colors.green,
         'Twisted twine': colors.gray,
         'Braided twine': colors.blue,
         'Mono filament': colors.yellow,
-
-        // ===== Manufacturing =====
         Knitting: colors.green,
         Knotting: colors.gray,
         Weaving: colors.blue,
-
-        // ===== Mesh connection =====
         Knotted: colors.gray,
         Knotless: colors.green,
-
-        // ===== Mesh shape =====
         'Rhombus (Square)': colors.green,
         Hexagonal: colors.blue,
-
-        // ===== Treatment =====
         Untreated: colors.gray,
         'Antifouling Treatment': colors.green,
-
-        // ===== End of life =====
         Recyclable: colors.green,
         'Non-recyclable': colors.red,
       };
@@ -209,15 +197,18 @@ export function SankeyDiagram() {
       const linkColors = value.map(() => "rgba(128, 128, 128, 0.4)");
 
       const width = containerRef.current.offsetWidth;
-      const height = Math.round(width / 2);
-
+      const height = Math.round(width / 2.5);
+      
       const dataPlot = [
         {
           type: "sankey",
           orientation: "h",
+          arrangement: "snap", // Crucial: overrides automatic sorting so x and y are respected
           node: {
             label: labels,
             color: nodeColors,
+            x: nodeX,
+            y: nodeY,
             pad: 15,
             thickness: 20,
             line: { color: "#444", width: 0.5 },
@@ -238,16 +229,13 @@ export function SankeyDiagram() {
             '<br><span style="font-size:16px;color:gray">' +
             'An Interactive Knowledge Map of Materials, Structures, Manufacturing and Sustainability' +
             '</span>',
-          font: {
-            size: 28,
-          },
-          x: 0.5, // center
+          font: { size: 28 },
+          x: 0.5,
           xanchor: "center",
         },
-
         width,
         height,
-        margin: { l: 0, r: 0, t: 60, b: 0 },
+        margin: { l: 10, r: 10, t: 60, b: 0 },
       };
 
       window.Plotly.react(containerRef.current, dataPlot, layout, { responsive: true });
@@ -262,5 +250,5 @@ export function SankeyDiagram() {
     };
   }, []);
 
-  return <div ref={containerRef} style={{ width: "100%", aspectRatio: "2 / 1", minHeight: 320 }} />;
+  return <div ref={containerRef} style={{ width: "100%", aspectRatio: "1 / 3", minHeight: 640 }} />;
 }
