@@ -224,15 +224,20 @@
     }
   ],
   "links": [
-    { "source": "pe", "target": "monofilament", "value": 10 },
-    { "source": "pe", "target": "multifilament", "value": 4 },
-    { "source": "pa", "target": "multifilament", "value": 8 },
-    { "source": "pet", "target": "braided-yarn", "value": 6 },
-    { "source": "monofilament", "target": "twisted-yarn", "value": 8 },
-    { "source": "multifilament", "target": "twisted-yarn", "value": 7 },
-    { "source": "multifilament", "target": "braided-yarn", "value": 5 },
+    
+    { "source": "pe", "target": "monofilament", "value": 0.5 },
+    { "source": "pe", "target": "multifilament", "value": 2 },
+    { "source": "pa", "target": "multifilament", "value": 4 },
+    { "source": "pa", "target": "monofilament", "value": 1 },
+    { "source": "pet", "target": "multifilament", "value": 2.5 },
+    
+    { "source": "monofilament", "target": "twisted-yarn", "value": 0.5 },
+    { "source": "multifilament", "target": "twisted-yarn", "value": 5 },
+    { "source": "multifilament", "target": "braided-yarn", "value": 4.5 },
+    
     { "source": "twisted-yarn", "target": "eight-strand-twine", "value": 10 },
     { "source": "braided-yarn", "target": "braided-twine", "value": 8 },
+    
     { "source": "eight-strand-twine", "target": "knotless-net", "value": 9 },
     { "source": "eight-strand-twine", "target": "knotted-net", "value": 4 },
     { "source": "braided-twine", "target": "semi-rigid-net", "value": 6 },
