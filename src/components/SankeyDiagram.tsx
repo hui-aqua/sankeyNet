@@ -88,22 +88,24 @@ export function SankeyDiagram() {
         ['Multifilament', 'Yarn', 4.38],
         ['Multifilament', 'Twisted twine', 3.5],
         ['Multifilament', 'Braided twine', 0.87],
-        ['Monofilament', 'Yarn', 0.31],
-        ['Monofilament', 'Mono filament', 1],
-        ['Split-film', 'Yarn', 0.44],
+        
+        // special case: Monofilament and split-film can be directly used as netting material without yarn manufacturing step, so it connects to both net manufacturing and mesh structure levels
+        ['Monofilament', 'Knitting', 0.31],
+        ['Monofilament', 'Weaving', 1],
+        ['Split-film', 'Knitting', 0.44],
 
         // Net manufacturing
-        ['Yarn', 'Knitting', 4.1],
-        ['Yarn', 'Weaving', 1.03],
+        ['Yarn', 'Knitting', 3.55],
+        ['Yarn', 'Weaving', 0.83],
         ['Twisted twine', 'Knotting', 3.5],
         ['Braided twine', 'Knotting', 0.37],
         ['Braided twine', 'Weaving', 0.5],
-        ['Mono filament', 'Weaving', 1],
+        
 
         // Mesh connection
-        ['Knitting', 'Knotless', 4.10],
+        ['Knitting', 'Knotless', 4.30],
         ['Knotting', 'Knotted', 3.87],
-        ['Weaving', 'Knotless', 2.53],
+        ['Weaving', 'Knotless', 2.33],
 
         // Mesh shape
         ['Knotted', 'Rhombus (Square)', 3.87],
@@ -189,7 +191,7 @@ export function SankeyDiagram() {
         {
           type: "sankey",
           orientation: "h",
-          arrangement: "snap",
+          arrangement: "free",
           node: {
             label: labels,
             color: nodeColors,
@@ -308,7 +310,7 @@ export function SankeyDiagram() {
 
   return (
     <div style={{ position: "relative", width: "100%", minHeight: 640 }}>
-      <div ref={containerRef} style={{ width: "100%", aspectRatio: "1 / 3", minHeight: 640 }} />
+      <div ref={containerRef} style={{ width: "100%", aspectRatio: "1 / 2", minHeight: 640 }} />
 
       {selectedNode && (
         <div 
@@ -344,7 +346,7 @@ export function SankeyDiagram() {
               />
             )}
 
-            <p style={{ margin: 0, lineHeight: "1.6", color: "#4b5563" }}>
+            <p style={{ margin: 0, lineHeight: "1.1", color: "#4b5563" }}>
               {selectedNode.description}
             </p>
           </div>
