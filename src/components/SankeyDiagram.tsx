@@ -55,34 +55,43 @@ export function SankeyDiagram() {
     async function draw() {
       await loadPlotly();
       if (cancelled || !currentContainer || !window.Plotly) return;
+      const rows = [
+        // 1. Material Type -> Material Family
+        ['Synthetic material', 'Polyamide family', 5],
+        ['Synthetic material', 'Polyester family', 1.7],
+        ['Synthetic material', 'Polyethylene family', 3.3],
+        ['Metal material', 'Steel family', 0.2],
+        ['Metal material', 'Copper Alloy family', 0.3],
 
-     const rows = [
-        // raw material (Enforced order for column 1)
-        ['PA6', 'Polyamide family', 4.05],
-        ['PA66', 'Polyamide family', 0.9],
-        ['PA610, PA612, etc.', 'Polyamide family', 0.05],
-        ['HDPE', 'Polyethylene family', 2.64],
-        ['UHMWPE', 'Polyethylene family', 0.66],
-        ['PET', 'Polyester family', 1.65],
-        ['PEN, PBT, PTT, etc.', 'Polyester family', 0.05],
-        ['Brass', 'Copper Alloy family', 0.1],
-        ['Silicon Bronze', 'Copper Alloy family', 0.1],
-        ['Copper Nickel', 'Copper Alloy family', 0.1],
-        ['Stainless Steel', 'Steel family', 0.1],
-        ['Galvanized Steel', 'Steel family', 0.1],
+        // 2. Material Family -> Raw Material
+        ['Polyamide family', 'PA6', 4.05],
+        ['Polyamide family', 'PA66', 0.9],
+        ['Polyamide family', 'PA610, PA612, etc.', 0.05],
+        ['Polyethylene family', 'HDPE', 2.64],
+        ['Polyethylene family', 'UHMWPE', 0.66],
+        ['Polyester family', 'PET', 1.65],
+        ['Polyester family', 'PEN, PBT, PTT, etc.', 0.05],
+        ['Steel family', 'Stainless Steel', 0.1],
+        ['Steel family', 'Galvanized Steel', 0.1],
+        ['Copper Alloy family', 'Brass', 0.1],
+        ['Copper Alloy family', 'Silicon Bronze', 0.1],
+        ['Copper Alloy family', 'Copper Nickel', 0.1],
 
-        // material level
-        ['Polyamide family', 'Synthetic material', 5],
-        ['Polyester family', 'Synthetic material', 1.7],
-        ['Polyethylene family', 'Synthetic material', 3.3],
-        ['Steel family', 'Metal material', 0.2],
-        ['Copper Alloy family', 'Metal material', 0.3],
-
-        // fiber level
-        ['Synthetic material', 'Multifilament', 8.75],
-        ['Synthetic material', 'Monofilament', 0.81],
-        ['Synthetic material', 'Split-film', 0.44],
-        ['Metal material', 'Monofilament', 0.5],
+        // 3. Raw Material -> Fiber Level (Best guess for distribution)
+        ['PA6', 'Multifilament', 4.05],
+        ['PA66', 'Multifilament', 0.9],
+        ['PA610, PA612, etc.', 'Multifilament', 0.05],
+        ['PET', 'Multifilament', 1.65],
+        ['PEN, PBT, PTT, etc.', 'Multifilament', 0.05],
+        ['HDPE', 'Multifilament', 2.05],
+        ['HDPE', 'Monofilament', 0.15],
+        ['HDPE', 'Split-film', 0.44],
+        ['UHMWPE', 'Monofilament', 0.66],
+        ['Stainless Steel', 'Monofilament', 0.1],
+        ['Galvanized Steel', 'Monofilament', 0.1],
+        ['Brass', 'Monofilament', 0.1],
+        ['Silicon Bronze', 'Monofilament', 0.1],
+        ['Copper Nickel', 'Monofilament', 0.1],
 
         // Yarn/Twine level
         ['Multifilament', 'Yarn', 4.38],
@@ -125,27 +134,7 @@ export function SankeyDiagram() {
         ['Antifouling Treatment', 'Non-recyclable', 3.17],
       ];
 
-      const forcedLeftOrder = [
-        'PA6', 'PA66', 'PA610, PA612, etc.',
-        'HDPE', 'UHMWPE', 'PET', 'PEN, PBT, PTT, etc.',
-        'Brass', 'Silicon Bronze', 'Copper Nickel',
-        'Stainless Steel', 'Galvanized Steel'
-      ];
-
       const labels = Array.from(new Set(rows.flatMap((row) => [String(row[0]), String(row[1])])));
-
-      const nodeX = labels.map((label) => forcedLeftOrder.includes(label) ? 0.01 : undefined);
-
-      const nodeY = labels.map((label) => {
-        const orderIndex = forcedLeftOrder.indexOf(label);
-        if (orderIndex !== -1) {
-          let modifier = 0;
-          if (label === 'PA610, PA612, etc.') modifier = -0.02;
-          if (label === 'HDPE') modifier = 0.02;
-          return 0.01 + (orderIndex / (forcedLeftOrder.length - 1)) * 0.98 + modifier;
-        }
-        return undefined;
-      });
 
       const indexMap = labels.reduce<Record<string, number>>((acc, label, idx) => {
         acc[label] = idx;
@@ -191,12 +180,9 @@ export function SankeyDiagram() {
         {
           type: "sankey",
           orientation: "h",
-          arrangement: "free",
           node: {
             label: labels,
             color: nodeColors,
-            x: nodeX,
-            y: nodeY,
             pad: 15,
             thickness: 20,
             line: { color: "#444", width: 0.5 },
